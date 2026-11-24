@@ -83,76 +83,31 @@
       }
 
       .content {
-        padding: 45px 38px 34px;
+        padding: 48px 40px 38px;
       }
 
       h1 {
-        margin: 0 0 28px;
+        margin: 0 0 32px;
         text-align: center;
-        font-size: 34px;
+        font-size: 36px;
         font-weight: 600;
         line-height: 1.35;
         letter-spacing: 0;
         color: #1f1f1f;
       }
 
-      .message-block {
-        padding: 22px 22px 20px;
-        border-left: 6px solid #f04438;
-        border-radius: 8px;
-        background: #fff6f5;
-      }
-
-      .message-label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 21px;
-        font-weight: 600;
-        line-height: 1.4;
-        color: #d92d20;
-      }
-
       .error-message {
         margin: 0;
-        font-size: 26px;
-        font-weight: 500;
-        line-height: 1.62;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.7;
         letter-spacing: 0;
-        color: #3d3d3d;
+        color: #303030;
       }
 
-      .question {
-        margin: 25px 0 16px;
-        font-size: 27px;
+      #error-copy {
         font-weight: 600;
-        line-height: 1.55;
-        letter-spacing: 0;
-        color: #1f1f1f;
-      }
-
-      .rule-note {
-        display: grid;
-        grid-template-columns: 34px minmax(0, 1fr);
-        gap: 10px;
-        align-items: start;
-        padding: 17px 18px;
-        border-radius: 8px;
-        font-size: 24px;
-        line-height: 1.6;
-        letter-spacing: 0;
-        color: #36516f;
-        background: #f2f7ff;
-      }
-
-      .rule-note svg {
-        width: 28px;
-        height: 28px;
-        margin-top: 4px;
-        fill: none;
-        stroke: #1769ff;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-width: 2;
+        color: #d92d20;
       }
 
       .actions {
@@ -240,7 +195,7 @@
           role="alertdialog"
           aria-modal="true"
           aria-labelledby="dialog-title"
-          aria-describedby="dialog-message dialog-rule"
+          aria-describedby="dialog-message"
         >
           <button class="close-button" id="close-button" type="button" aria-label="关闭温馨提示">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -250,24 +205,7 @@
 
           <div class="content">
             <h1 id="dialog-title">温馨提示</h1>
-
-            <div class="message-block">
-              <span class="message-label">当前订单提示</span>
-              <p class="error-message" id="dialog-message">
-                自主控价收益校验未通过，当前订单暂不能参与换新活动。
-              </p>
-            </div>
-
-            <p class="question">是否按纯回收办理？</p>
-
-            <div class="rule-note" id="dialog-rule">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 10.5v6"></path>
-                <path d="M12 7.5h.01"></path>
-              </svg>
-              <span>纯回收不执行该校验，且不参与换新活动。</span>
-            </div>
+            <p class="error-message" id="dialog-message"><span id="error-copy">自主控价收益校验未通过，当前订单暂不能参与换新活动。</span>是否纯回收，纯回收不执行该校验，不参与换新活动。</p>
           </div>
 
           <div class="actions">
@@ -285,12 +223,12 @@
       const closeButton = document.querySelector("#close-button");
       const confirmButton = document.querySelector("#confirm-button");
       const reopenButton = document.querySelector("#reopen-button");
-      const message = document.querySelector("#dialog-message");
+      const errorCopy = document.querySelector("#error-copy");
       const params = new URLSearchParams(window.location.search);
       const dynamicMessage = params.get("error");
 
       if (dynamicMessage?.trim()) {
-        message.textContent = dynamicMessage.trim();
+        errorCopy.textContent = dynamicMessage.trim();
       }
 
       function closeDialog() {

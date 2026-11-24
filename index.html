@@ -274,7 +274,7 @@
       <span class="eyebrow">回收业务 · 弹窗优化</span>
       <h1>校验失败提示改为温馨提示弹窗</h1>
       <p class="intro">
-        原吐司提示改为带遮罩的阻塞式弹窗。弹窗承接对应报错文案，并引导用户确认是否按纯回收继续办理。
+        原吐司提示改为带遮罩的弹窗。弹窗展示对应报错提示，并明确纯回收不执行该校验、不参与换新活动。
       </p>
 
       <div class="workspace">
@@ -291,17 +291,17 @@
 
         <section class="details" aria-labelledby="details-title">
           <h2 id="details-title">弹窗信息结构</h2>
-          <p>标题固定为“温馨提示”，中间展示本次触发校验时的具体报错原因。</p>
+          <p>弹窗只保留你给定的信息，不增加提示标签或额外交互选项。</p>
 
           <ul class="points">
-            <li><span>01</span><div><b>动态报错文案</b>承接当前校验失败原因，避免只显示笼统的“操作失败”。</div></li>
-            <li><span>02</span><div><b>规则说明</b>明确纯回收不执行该校验，并且不参与换新活动。</div></li>
+            <li><span>01</span><div><b>温馨提示</b>作为固定标题。</div></li>
+            <li><span>02</span><div><b>正文</b>承接对应报错提示，并说明是否纯回收及纯回收规则。</div></li>
             <li><span>03</span><div><b>操作收敛</b>主按钮为“纯回收不参与活动”，右上角提供关闭按钮。</div></li>
           </ul>
 
           <div class="copy-block">
-            <strong>默认示例文案</strong>
-            <p>自主控价收益校验未通过，当前订单暂不能参与换新活动。</p>
+            <strong>弹窗正文示例</strong>
+            <p>自主控价收益校验未通过，当前订单暂不能参与换新活动。是否纯回收，纯回收不执行该校验，不参与换新活动。</p>
           </div>
 
           <div class="actions">
