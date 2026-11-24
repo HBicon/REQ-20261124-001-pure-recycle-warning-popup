@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="纯回收校验温馨提示弹窗交互原型：将原吐司错误提示改为阻塞式弹窗，支持动态报错文案、右上角关闭和纯回收确认。"
+    />
+    <title>纯回收校验温馨提示弹窗｜交互原型</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231769ff'/%3E%3Cpath d='M20 18h24v7H20zm0 12h24v7H20zm0 12h16v7H20z' fill='white'/%3E%3C/svg%3E"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+        color: #1f2937;
+        background: #eef3f8;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% 12%, rgba(23, 105, 255, 0.1), transparent 28%),
+          linear-gradient(135deg, #f7fafe 0%, #edf3f9 100%);
+      }
+
+      .page {
+        width: min(1080px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 48px 0 56px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: #1769ff;
+      }
+
+      .eyebrow::before {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #1769ff;
+        content: "";
+      }
+
+      h1 {
+        max-width: 780px;
+        margin: 0;
+        font-size: clamp(30px, 5vw, 48px);
+        font-weight: 650;
+        line-height: 1.18;
+        letter-spacing: -0.035em;
+      }
+
+      .intro {
+        max-width: 760px;
+        margin: 16px 0 0;
+        font-size: 17px;
+        line-height: 1.75;
+        color: #596579;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(360px, 390px) minmax(420px, 1fr);
+        gap: clamp(36px, 5vw, 64px);
+        align-items: center;
+        margin-top: 42px;
+      }
+
+      .preview-column {
+        justify-self: center;
+      }
+
+      .device {
+        position: relative;
+        width: 334px;
+        height: 737px;
+        overflow: hidden;
+        border: 9px solid #18202c;
+        border-radius: 26px;
+        background: #ffffff;
+        container-type: inline-size;
+        box-shadow:
+          0 34px 70px rgba(31, 51, 82, 0.22),
+          0 8px 20px rgba(31, 51, 82, 0.12);
+      }
+
+      .device::before {
+        position: absolute;
+        z-index: 2;
+        top: 8px;
+        left: 50%;
+        width: 70px;
+        height: 5px;
+        border-radius: 999px;
+        background: rgba(16, 22, 31, 0.72);
+        content: "";
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+
+      .prototype-frame {
+        position: absolute;
+        inset: 0;
+        width: 668px;
+        height: 1474px;
+        border: 0;
+        transform: scale(0.5);
+        transform-origin: 0 0;
+      }
+
+      .preview-caption {
+        margin: 18px 0 0;
+        text-align: center;
+        font-size: 13px;
+        line-height: 1.6;
+        color: #6b778b;
+      }
+
+      .details {
+        padding: 30px;
+        border: 1px solid rgba(87, 108, 137, 0.16);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 18px 50px rgba(31, 51, 82, 0.08);
+        backdrop-filter: blur(12px);
+      }
+
+      .details h2 {
+        margin: 0 0 10px;
+        font-size: 23px;
+        line-height: 1.35;
+        letter-spacing: -0.02em;
+      }
+
+      .details > p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #5d697c;
+      }
+
+      .points {
+        display: grid;
+        gap: 12px;
+        margin: 24px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .points li {
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #303b4d;
+      }
+
+      .points b,
+      .points li > div {
+        display: block;
+      }
+
+      .points b {
+        margin-bottom: 3px;
+        color: #263246;
+      }
+
+      .points span {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: 700;
+        color: #1769ff;
+        background: #eaf2ff;
+      }
+
+      .copy-block {
+        margin-top: 24px;
+        padding: 16px 18px;
+        border-left: 4px solid #1769ff;
+        border-radius: 8px;
+        background: #f3f7ff;
+      }
+
+      .copy-block strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #1769ff;
+      }
+
+      .copy-block p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.65;
+        color: #40506a;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .actions a {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        border: 1px solid #b8cff4;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #1769ff;
+        background: #ffffff;
+      }
+
+      .actions a:first-child {
+        border-color: #1769ff;
+        color: #ffffff;
+        background: #1769ff;
+      }
+
+      a:focus-visible {
+        outline: 4px solid rgba(23, 105, 255, 0.25);
+        outline-offset: 3px;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100% - 28px, 430px);
+          padding-top: 30px;
+        }
+
+        .workspace {
+          grid-template-columns: 1fr;
+          gap: 30px;
+          margin-top: 30px;
+        }
+
+        .details {
+          padding: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <span class="eyebrow">回收业务 · 弹窗优化</span>
+      <h1>校验失败提示改为温馨提示弹窗</h1>
+      <p class="intro">
+        原吐司提示改为带遮罩的阻塞式弹窗。弹窗承接对应报错文案，并引导用户确认是否按纯回收继续办理。
+      </p>
+
+      <div class="workspace">
+        <div class="preview-column">
+          <div class="device">
+            <iframe
+              class="prototype-frame"
+              src="./popup.html"
+              title="纯回收校验温馨提示弹窗预览"
+            ></iframe>
+          </div>
+          <p class="preview-caption">可直接点击右上角 × 或底部按钮体验关闭效果</p>
+        </div>
+
+        <section class="details" aria-labelledby="details-title">
+          <h2 id="details-title">弹窗信息结构</h2>
+          <p>标题固定为“温馨提示”，中间展示本次触发校验时的具体报错原因。</p>
+
+          <ul class="points">
+            <li><span>01</span><div><b>动态报错文案</b>承接当前校验失败原因，避免只显示笼统的“操作失败”。</div></li>
+            <li><span>02</span><div><b>规则说明</b>明确纯回收不执行该校验，并且不参与换新活动。</div></li>
+            <li><span>03</span><div><b>操作收敛</b>主按钮为“纯回收不参与活动”，右上角提供关闭按钮。</div></li>
+          </ul>
+
+          <div class="copy-block">
+            <strong>默认示例文案</strong>
+            <p>自主控价收益校验未通过，当前订单暂不能参与换新活动。</p>
+          </div>
+
+          <div class="actions">
+            <a href="./popup.html">打开全尺寸原型</a>
+            <a href="./popup.html?error=当前订单暂不符合换新活动参与条件。">查看动态文案示例</a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
